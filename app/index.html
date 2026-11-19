@@ -1,108 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Forge — GTA-style cover art maker</title>
-<link rel="stylesheet" href="studio.css">
+<title>Neon Poster — Cover Art Maker</title>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <header class="topbar">
   <div class="brand">
-    <span class="brand-mark">CF</span>
-    <div class="brand-text">
-      <h1>Cover Forge</h1>
-      <p>GTA-style cover art maker — your photos, poster-grade covers, exported as PNG.</p>
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>Neon Poster</h1>
+      <p>Turn your photos into bold multi-panel cover art. Everything runs locally — photos never leave this page.</p>
     </div>
   </div>
-  <div class="topbar-note">Runs fully offline. Photos never leave this machine.</div>
+  <div class="export-box">
+    <label class="size-pick">Size
+      <select id="export-size">
+        <option value="1920x1080">1920 × 1080 (wide)</option>
+        <option value="1080x1080">1080 × 1080 (square)</option>
+        <option value="1080x1350">1080 × 1350 (portrait)</option>
+      </select>
+    </label>
+    <button id="export" type="button">Export PNG</button>
+  </div>
 </header>
 
-<main class="studio">
-  <section class="stage" id="stage">
-    <div class="canvas-wrap" id="canvasWrap">
-      <canvas id="preview" width="960" height="540"></canvas>
-      <div class="drop-veil" id="dropVeil">Drop photos to load them</div>
-    </div>
-    <p class="stage-hint">Click a panel to select it. Drag to reposition its photo, scroll to zoom.</p>
-    <div class="export-bar">
-      <span class="export-label">Export size</span>
-      <button type="button" class="size-btn" data-size="1080x1080">Square 1080×1080</button>
-      <button type="button" class="size-btn" data-size="1080x1350">Portrait 1080×1350</button>
-      <button type="button" class="size-btn is-active" data-size="1920x1080">Wide 1920×1080</button>
-      <button type="button" class="export-btn" id="exportBtn">Export PNG</button>
-    </div>
-  </section>
-
-  <aside class="controls">
-    <section class="control-group">
-      <h2>Photos</h2>
-      <div class="row">
-        <label class="file-btn" for="photoInput">Add photos</label>
-        <input type="file" id="photoInput" accept="image/*" multiple hidden>
-        <button type="button" class="ghost-btn" id="samplesBtn">Use sample photos</button>
-      </div>
-      <div class="photo-strip" id="photoStrip"></div>
-      <p class="micro">Click a photo to put it in the selected panel.</p>
+<main class="layout">
+  <aside class="panel controls">
+    <section>
+      <h2>1 · Photos</h2>
+      <label class="drop" id="drop">
+        <input id="photo-input" type="file" accept="image/*" multiple>
+        <span><strong>Add photos</strong> — click or drop files here</span>
+        <small>Several at once is fine. Nothing is uploaded.</small>
+      </label>
+      <div id="thumbs" class="thumbs" aria-label="Your photos"></div>
+      <p class="hint">Click a thumbnail to put it in the selected panel. Each panel can hold a different photo — or use one photo everywhere.</p>
+      <button id="fill-all" type="button" class="ghost">Use selected photo in every panel</button>
     </section>
 
-    <section class="control-group">
-      <h2>Layout</h2>
-      <div class="layout-grid" id="layoutGrid">
-        <button type="button" class="layout-btn" data-layout="single">Single</button>
-        <button type="button" class="layout-btn" data-layout="duo">Duo</button>
-        <button type="button" class="layout-btn" data-layout="trio">Trio</button>
-        <button type="button" class="layout-btn is-active" data-layout="quad">Quad</button>
-        <button type="button" class="layout-btn" data-layout="hero">Hero + 2</button>
-      </div>
+    <section>
+      <h2>2 · Layout</h2>
+      <div id="layouts" class="chips" role="radiogroup" aria-label="Layout"></div>
+      <label class="row">Panel gap <input id="gap" type="range" min="0" max="40" step="1" value="10"><span id="gap-val">10</span></label>
+      <label class="row">Frame colour <input id="frame-color" type="color" value="#12081f"></label>
     </section>
 
-    <section class="control-group">
-      <h2>Selected panel <span class="panel-badge" id="panelBadge">1</span></h2>
-      <label class="slider-row">Zoom <input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1"></label>
-      <label class="slider-row">Shift X <input type="range" id="shiftXRange" min="-1" max="1" step="0.01" value="0"></label>
-      <label class="slider-row">Shift Y <input type="range" id="shiftYRange" min="-1" max="1" step="0.01" value="0"></label>
-      <div class="row">
-        <button type="button" class="ghost-btn" id="fillAllBtn">Same photo in every panel</button>
-        <button type="button" class="ghost-btn" id="resetPanelBtn">Reset panel</button>
-      </div>
+    <section>
+      <h2>3 · Grade</h2>
+      <div id="grades" class="chips" role="radiogroup" aria-label="Colour grade"></div>
+      <p class="hint">Poster Comic flattens colours and inks the edges so a photo reads like printed cover art.</p>
     </section>
 
-    <section class="control-group">
-      <h2>Colour grade</h2>
-      <div class="grade-grid" id="gradeGrid">
-        <button type="button" class="grade-btn is-active" data-grade="sunset">Vice Sunset</button>
-        <button type="button" class="grade-btn" data-grade="neon">Neon Nights</button>
-        <button type="button" class="grade-btn" data-grade="duotone">Duotone</button>
-        <button type="button" class="grade-btn" data-grade="mono">Mono Ink</button>
-        <button type="button" class="grade-btn" data-grade="none">Clean</button>
+    <section>
+      <h2>4 · Selected panel</h2>
+      <p id="panel-name" class="hint strong">Panel 1</p>
+      <label class="row">Zoom <input id="zoom" type="range" min="1" max="3" step="0.01" value="1"><span id="zoom-val">1.00×</span></label>
+      <div class="row buttons">
+        <button id="reset-panel" type="button" class="ghost">Reset framing</button>
+        <button id="clear-panel" type="button" class="ghost">Clear panel</button>
       </div>
-      <label class="slider-row">Film grain <input type="range" id="grainRange" min="0" max="1" step="0.01" value="0.35"></label>
-      <label class="slider-row">Vignette <input type="range" id="vignetteRange" min="0" max="1" step="0.01" value="0.45"></label>
+      <p class="hint">Drag on the preview to reposition. Scroll over a panel to zoom it. Click a panel to select it.</p>
     </section>
 
-    <section class="control-group">
-      <h2>Caption</h2>
-      <input type="text" id="captionInput" value="VICE CITY NIGHTS" maxlength="42" placeholder="Your cover caption">
-      <div class="grade-grid" id="captionStyleGrid">
-        <button type="button" class="grade-btn is-active" data-style="sunset-block">Sunset Block</button>
-        <button type="button" class="grade-btn" data-style="neon-sign">Neon Sign</button>
-        <button type="button" class="grade-btn" data-style="chrome">Chrome</button>
-        <button type="button" class="grade-btn" data-style="retro">Retro Serif</button>
-      </div>
-      <label class="slider-row">Letter size <input type="range" id="captionSizeRange" min="0.5" max="1.8" step="0.01" value="1"></label>
-      <div class="row">
-        <button type="button" class="ghost-btn is-active" id="captionBottomBtn">Caption at bottom</button>
-        <button type="button" class="ghost-btn" id="captionTopBtn">Caption at top</button>
-      </div>
+    <section>
+      <h2>5 · Caption</h2>
+      <label class="stack">Line 1 <input id="cap1" type="text" maxlength="28" value="NEON"></label>
+      <label class="stack">Line 2 <input id="cap2" type="text" maxlength="28" value="HORIZON"></label>
+      <div id="cap-styles" class="chips" role="radiogroup" aria-label="Caption style"></div>
+      <label class="row">Size <input id="cap-size" type="range" min="40" max="220" step="1" value="100"><span id="cap-size-val">100%</span></label>
+      <label class="row">Outline <input id="cap-outline" type="range" min="0" max="30" step="1" value="14"><span id="cap-outline-val">14</span></label>
+      <label class="row">Vertical <input id="cap-y" type="range" min="0" max="100" step="1" value="86"><span id="cap-y-val">86%</span></label>
+      <label class="row">Tilt <input id="cap-tilt" type="range" min="-8" max="8" step="0.5" value="-2"><span id="cap-tilt-val">-2°</span></label>
     </section>
+
+    <p id="status" role="status"></p>
   </aside>
+
+  <section class="stage">
+    <div class="stage-head">
+      <span id="stage-label">Preview — 1920 × 1080</span>
+      <span class="hint">Live preview. Export renders at full size.</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="cover" width="1920" height="1080" aria-label="Cover preview"></canvas>
+    </div>
+    <ol class="steps">
+      <li>Add photos (or start from the samples already loaded)</li>
+      <li>Pick a layout and a grade</li>
+      <li>Drag and zoom each panel, type your caption</li>
+      <li>Export PNG — done in under a minute</li>
+    </ol>
+  </section>
 </main>
 
-<footer class="foot">
-  <p>Cover Forge is an original fan tool. It uses no game logos, artwork or fonts — every cover is made from your own photos, on your own machine.</p>
-</footer>
-
-<script type="module" src="studio.js"></script>
+<script type="module" src="./src/main.js"></script>
 </body>
 </html>
