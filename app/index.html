@@ -3,98 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neon Poster — Cover Art Maker</title>
+<title>Neon Poster — GTA-Style Cover Maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark" aria-hidden="true"></span>
-    <div>
-      <h1>Neon Poster</h1>
-      <p>Turn your photos into bold multi-panel cover art. Everything runs locally — photos never leave this page.</p>
-    </div>
-  </div>
-  <div class="export-box">
-    <label class="size-pick">Size
-      <select id="export-size">
-        <option value="1920x1080">1920 × 1080 (wide)</option>
-        <option value="1080x1080">1080 × 1080 (square)</option>
-        <option value="1080x1350">1080 × 1350 (portrait)</option>
-      </select>
-    </label>
-    <button id="export" type="button">Export PNG</button>
-  </div>
-</header>
+<div id="studio" class="studio">
+  <aside id="controlPanel" class="control-panel">
+    <header class="brand">
+      <h1>NEON POSTER</h1>
+      <p class="tagline">Turn any photo into multi-panel cover art. Photos stay on your machine.</p>
+    </header>
 
-<main class="layout">
-  <aside class="panel controls">
-    <section>
+    <section class="control-group" aria-label="Photos">
       <h2>1 · Photos</h2>
-      <label class="drop" id="drop">
-        <input id="photo-input" type="file" accept="image/*" multiple>
-        <span><strong>Add photos</strong> — click or drop files here</span>
-        <small>Several at once is fine. Nothing is uploaded.</small>
+      <label class="upload-button">
+        <span>Upload your photo</span>
+        <input id="photoUpload" type="file" accept="image/*" multiple>
       </label>
-      <div id="thumbs" class="thumbs" aria-label="Your photos"></div>
-      <p class="hint">Click a thumbnail to put it in the selected panel. Each panel can hold a different photo — or use one photo everywhere.</p>
-      <button id="fill-all" type="button" class="ghost">Use selected photo in every panel</button>
-    </section>
-
-    <section>
-      <h2>2 · Layout</h2>
-      <div id="layouts" class="chips" role="radiogroup" aria-label="Layout"></div>
-      <label class="row">Panel gap <input id="gap" type="range" min="0" max="40" step="1" value="10"><span id="gap-val">10</span></label>
-      <label class="row">Frame colour <input id="frame-color" type="color" value="#12081f"></label>
-    </section>
-
-    <section>
-      <h2>3 · Grade</h2>
-      <div id="grades" class="chips" role="radiogroup" aria-label="Colour grade"></div>
-      <p class="hint">Poster Comic flattens colours and inks the edges so a photo reads like printed cover art.</p>
-    </section>
-
-    <section>
-      <h2>4 · Selected panel</h2>
-      <p id="panel-name" class="hint strong">Panel 1</p>
-      <label class="row">Zoom <input id="zoom" type="range" min="1" max="3" step="0.01" value="1"><span id="zoom-val">1.00×</span></label>
-      <div class="row buttons">
-        <button id="reset-panel" type="button" class="ghost">Reset framing</button>
-        <button id="clear-panel" type="button" class="ghost">Clear panel</button>
+      <p class="hint">Or tap a sample to load it. Click a panel, then pick a photo to fill it.</p>
+      <div id="sampleStrip" class="sample-strip"></div>
+      <div class="row-buttons">
+        <button id="fillAllPanels" type="button">Fill all panels with active photo</button>
+        <button id="cycleSamples" type="button">One sample per panel</button>
       </div>
-      <p class="hint">Drag on the preview to reposition. Scroll over a panel to zoom it. Click a panel to select it.</p>
     </section>
 
-    <section>
-      <h2>5 · Caption</h2>
-      <label class="stack">Line 1 <input id="cap1" type="text" maxlength="28" value="NEON"></label>
-      <label class="stack">Line 2 <input id="cap2" type="text" maxlength="28" value="HORIZON"></label>
-      <div id="cap-styles" class="chips" role="radiogroup" aria-label="Caption style"></div>
-      <label class="row">Size <input id="cap-size" type="range" min="40" max="220" step="1" value="100"><span id="cap-size-val">100%</span></label>
-      <label class="row">Outline <input id="cap-outline" type="range" min="0" max="30" step="1" value="14"><span id="cap-outline-val">14</span></label>
-      <label class="row">Vertical <input id="cap-y" type="range" min="0" max="100" step="1" value="86"><span id="cap-y-val">86%</span></label>
-      <label class="row">Tilt <input id="cap-tilt" type="range" min="-8" max="8" step="0.5" value="-2"><span id="cap-tilt-val">-2°</span></label>
+    <section class="control-group" aria-label="Layout">
+      <h2>2 · Layout</h2>
+      <div id="layoutPicker" class="picker-grid"></div>
     </section>
 
-    <p id="status" role="status"></p>
+    <section class="control-group" aria-label="Colour grade">
+      <h2>3 · Colour grade</h2>
+      <div id="gradePicker" class="picker-grid"></div>
+      <label class="slider-label">Grade strength
+        <input id="gradeStrength" type="range" min="0" max="100" value="85">
+      </label>
+    </section>
+
+    <section class="control-group" aria-label="Caption lettering">
+      <h2>4 · Caption lettering</h2>
+      <label>Title
+        <input id="captionTitle" type="text" maxlength="28" value="NEON SHORE">
+      </label>
+      <label>Subtitle
+        <input id="captionSubtitle" type="text" maxlength="40" value="Vice City Nights">
+      </label>
+      <div id="letteringPicker" class="picker-grid"></div>
+    </section>
+
+    <section class="control-group" aria-label="Panel crop">
+      <h2>5 · Panel crop</h2>
+      <p class="hint">Drag a panel on the cover to reposition. Scroll or use the slider to zoom.</p>
+      <label class="slider-label">Zoom selected panel
+        <input id="panelZoom" type="range" min="100" max="300" value="100">
+      </label>
+      <div class="row-buttons">
+        <button id="resetPanel" type="button">Reset panel</button>
+        <button id="resetAllPanels" type="button">Reset all</button>
+      </div>
+    </section>
+
+    <section class="control-group" aria-label="Export">
+      <h2>6 · Export PNG</h2>
+      <div id="sizePicker" class="picker-grid"></div>
+      <button id="exportCover" type="button" class="export-button">Export cover PNG</button>
+      <p id="statusLine" class="status" role="status"></p>
+    </section>
   </aside>
 
-  <section class="stage">
-    <div class="stage-head">
-      <span id="stage-label">Preview — 1920 × 1080</span>
-      <span class="hint">Live preview. Export renders at full size.</span>
+  <main class="stage">
+    <div class="stage-toolbar">
+      <span id="stageLabel">Live preview</span>
+      <span id="panelLabel" class="panel-label">Panel 1 selected</span>
     </div>
-    <div class="canvas-wrap">
-      <canvas id="cover" width="1920" height="1080" aria-label="Cover preview"></canvas>
+    <div id="canvasWrap" class="canvas-wrap">
+      <canvas id="coverCanvas" width="1080" height="1080" aria-label="Cover preview"></canvas>
     </div>
-    <ol class="steps">
-      <li>Add photos (or start from the samples already loaded)</li>
-      <li>Pick a layout and a grade</li>
-      <li>Drag and zoom each panel, type your caption</li>
-      <li>Export PNG — done in under a minute</li>
-    </ol>
-  </section>
-</main>
+    <p class="stage-hint">Tip: one photo can fill every panel, or give each panel its own photo for a classic poster grid.</p>
+  </main>
+</div>
+
+<div id="shotStage" class="shot-stage" hidden>
+  <canvas id="shotCanvas" aria-label="Exported cover"></canvas>
+</div>
 
 <script type="module" src="./src/main.js"></script>
 </body>
