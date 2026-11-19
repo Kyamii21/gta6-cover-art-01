@@ -1,36 +1,26 @@
-# Cover Forge — GTA-style cover art maker
+# Neon Poster — GTA-Style Cover Maker
 
-[![gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
+[![make.fun bounty](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![rank](https://make.fun/badge/gta6-cover-art-01/Kyamii21/gta6-cover-art-01/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![reward](https://make.fun/badge/gta6-cover-art-01/Kyamii21/gta6-cover-art-01/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
 
-An offline web app that turns your own photos and a caption into GTA-style
-poster cover art, exported as a PNG to share. Entry for the make.fun
-[gta6-cover-art-01](https://make.fun/bounty/gta6-cover-art-01) bounty.
+Neon Poster turns any photo and a caption into multi-panel GTA-style cover art, entirely offline in the browser. Photos are read locally and never uploaded.
 
-## What it does
+## Features
 
-- **Any photo**: add photos by file picker or drag-and-drop; they are read
-  on your machine and never uploaded.
-- **Multi-panel posters**: single, duo, trio, quad and hero layouts with
-  comic-style gutters and slanted dividers. Click a panel to select it,
-  drag to reposition its photo, scroll or slide to zoom and crop.
-- **Colour grades**: Vice Sunset, Neon Nights, Duotone, Mono Ink and Clean,
-  painted with canvas filters and light washes, plus film grain and
-  vignette sliders.
-- **Poster lettering**: four caption styles — Sunset Block, Neon Sign,
-  Chrome and Retro Serif — auto-fitted, wrapped, top or bottom.
-- **One-click export**: PNG at 1080×1080, 1080×1350 or 1920×1080.
+- Upload your own photos (multiple at once) or start from 6 built-in Vice City sample photos
+- 6 poster layouts: Grid 4, Hero + 3, Full Bleed, Grid 6, Grid 9, Split Duo — one photo in every panel or a different photo per panel
+- Per-panel crop: drag to reposition, scroll or slider to zoom, faces stay framed with a centre-top default focus
+- 6 colour grades rendered with canvas pixel data, including **Poster Comic** (posterize + ink edge overlay), Vice Sunset, Neon Night, Golden Hour, Mono Ink and Clean Photo, with adjustable strength
+- 5 caption lettering styles with stroke, shadow and gradient fills, including a two-line stacked poster title + subtitle — system font stacks only, no downloads
+- One-click PNG export in 1080 x 1080, 1080 x 1350 and 1920 x 1080, rendered at full size so the export matches the preview
 
-Everything is original: no game logos, artwork or fonts. The app is plain
-static files under `app/` and runs with the network off — serve it with any
-static file server and open `index.html`.
+## Run it
 
-## Layout of this repository
+Serve the `app/` folder with any static server, or open `app/index.html` in desktop Chrome. No build step and no network requests.
 
-- `app/` — the web app (`index.html`, `studio.css`, `studio.js`,
-  `cover-renderer.js`, `grades.js`, `lettering.js`, sample photos).
-- `screenshots/` — renders of the app and the covers it exports.
-- `main.ts` — copies `app/` and `screenshots/` to the output directory and
-  writes `dossier.json` with `buildDossier` from `vendor/makefun-app.ts`.
-- `vendor/makefun-app.ts` — the make.fun kit library, unchanged.
+Screenshot presets: `?shot=editor`, `?shot=cover-landscape`, `?shot=cover-square`, `?shot=cover-portrait`.
+
+## License
+
+MIT — see LICENSE.
