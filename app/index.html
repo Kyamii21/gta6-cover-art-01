@@ -3,91 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Neon Poster — GTA-Style Cover Maker</title>
+<title>Neon Vice Cover Forge — GTA-Style Cover Art Maker</title>
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div id="studio" class="studio">
-  <aside id="controlPanel" class="control-panel">
+<div id="app" class="app">
+  <aside class="panel" id="controls">
     <header class="brand">
-      <h1>NEON POSTER</h1>
-      <p class="tagline">Turn any photo into multi-panel cover art. Photos stay on your machine.</p>
+      <h1>NEON VICE<br><span>COVER FORGE</span></h1>
+      <p class="tag">Turn your own photo into a bold multi-panel poster cover. Everything runs locally in your browser — your photo is never uploaded.</p>
     </header>
 
-    <section class="control-group" aria-label="Photos">
-      <h2>1 · Photos</h2>
-      <label class="upload-button">
-        <span>Upload your photo</span>
-        <input id="photoUpload" type="file" accept="image/*" multiple>
+    <section class="group">
+      <h2>1 · Photo</h2>
+      <label class="upload">Upload your photo
+        <input id="file" type="file" accept="image/*">
       </label>
-      <p class="hint">Or tap a sample to load it. Click a panel, then pick a photo to fill it.</p>
-      <div id="sampleStrip" class="sample-strip"></div>
-      <div class="row-buttons">
-        <button id="fillAllPanels" type="button">Fill all panels with active photo</button>
-        <button id="cycleSamples" type="button">One sample per panel</button>
-      </div>
+      <div class="gallery" id="gallery" aria-label="Sample photos"></div>
+      <p class="hint">Drag a panel to reposition · scroll / pinch to zoom · double-click resets a panel.</p>
     </section>
 
-    <section class="control-group" aria-label="Layout">
+    <section class="group">
       <h2>2 · Layout</h2>
-      <div id="layoutPicker" class="picker-grid"></div>
+      <div class="chips" id="layouts"></div>
+      <label class="row">Border width <input id="borderW" type="range" min="0" max="28" value="10"><span id="borderWv">10</span></label>
+      <label class="row">Border colour <input id="borderC" type="color" value="#111111"></label>
     </section>
 
-    <section class="control-group" aria-label="Colour grade">
-      <h2>3 · Colour grade</h2>
-      <div id="gradePicker" class="picker-grid"></div>
-      <label class="slider-label">Grade strength
-        <input id="gradeStrength" type="range" min="0" max="100" value="85">
-      </label>
+    <section class="group">
+      <h2>3 · Poster grade</h2>
+      <div class="chips" id="grades"></div>
+      <label class="row">Posterize levels <input id="levels" type="range" min="2" max="12" value="5"><span id="levelsv">5</span></label>
+      <label class="row">Ink edge strength <input id="ink" type="range" min="0" max="100" value="55"><span id="inkv">55</span></label>
+      <label class="row check"><input id="halftone" type="checkbox"> Halftone dots</label>
+      <label class="row check"><input id="grain" type="checkbox" checked> Film grain</label>
+      <label class="row check"><input id="vignette" type="checkbox" checked> Vignette</label>
     </section>
 
-    <section class="control-group" aria-label="Caption lettering">
-      <h2>4 · Caption lettering</h2>
-      <label>Title
-        <input id="captionTitle" type="text" maxlength="28" value="NEON SHORE">
-      </label>
-      <label>Subtitle
-        <input id="captionSubtitle" type="text" maxlength="40" value="Vice City Nights">
-      </label>
-      <div id="letteringPicker" class="picker-grid"></div>
+    <section class="group">
+      <h2>4 · Lettering</h2>
+      <label class="row col">Title <input id="title" type="text" maxlength="30" value="SUNSET HEIST"></label>
+      <label class="row col">Subtitle <input id="subtitle" type="text" maxlength="40" value="A NEON VICE STORY"></label>
+      <div class="chips" id="lettering"></div>
+      <label class="row">Title size <input id="tsize" type="range" min="40" max="200" value="110"><span id="tsizev">110</span></label>
+      <label class="row">Title height <input id="tpos" type="range" min="5" max="95" value="78"><span id="tposv">78</span></label>
     </section>
 
-    <section class="control-group" aria-label="Panel crop">
-      <h2>5 · Panel crop</h2>
-      <p class="hint">Drag a panel on the cover to reposition. Scroll or use the slider to zoom.</p>
-      <label class="slider-label">Zoom selected panel
-        <input id="panelZoom" type="range" min="100" max="300" value="100">
-      </label>
-      <div class="row-buttons">
-        <button id="resetPanel" type="button">Reset panel</button>
-        <button id="resetAllPanels" type="button">Reset all</button>
+    <section class="group">
+      <h2>5 · Export</h2>
+      <div class="row btns">
+        <button id="shuffle" type="button">🎲 Shuffle look</button>
       </div>
-    </section>
-
-    <section class="control-group" aria-label="Export">
-      <h2>6 · Export PNG</h2>
-      <div id="sizePicker" class="picker-grid"></div>
-      <button id="exportCover" type="button" class="export-button">Export cover PNG</button>
-      <p id="statusLine" class="status" role="status"></p>
+      <div class="row btns">
+        <button class="exp" data-w="1080" data-h="1080" type="button">PNG 1080×1080</button>
+        <button class="exp" data-w="1080" data-h="1350" type="button">PNG 1080×1350</button>
+        <button class="exp" data-w="1920" data-h="1080" type="button">PNG 1920×1080</button>
+      </div>
+      <p id="status" role="status"></p>
     </section>
   </aside>
 
   <main class="stage">
-    <div class="stage-toolbar">
-      <span id="stageLabel">Live preview</span>
-      <span id="panelLabel" class="panel-label">Panel 1 selected</span>
-    </div>
-    <div id="canvasWrap" class="canvas-wrap">
-      <canvas id="coverCanvas" width="1080" height="1080" aria-label="Cover preview"></canvas>
-    </div>
-    <p class="stage-hint">Tip: one photo can fill every panel, or give each panel its own photo for a classic poster grid.</p>
+    <canvas id="cover" width="1080" height="1080" aria-label="Cover preview"></canvas>
   </main>
 </div>
-
-<div id="shotStage" class="shot-stage" hidden>
-  <canvas id="shotCanvas" aria-label="Exported cover"></canvas>
-</div>
-
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
