@@ -1,0 +1,15 @@
+Bundled fonts and their licenses
+================================
+
+NotoSansDisplay-Black.ttf — "Noto Sans Display" Black weight.
+Copyright Google. Licensed under the SIL Open Font License 1.1 (OFL),
+which permits use, study, modification and redistribution, including
+bundling with software. Full text: https://openfontlicense.org
+
+LiberationSans-BoldItalic.ttf — "Liberation Sans" Bold Italic.
+Licensed under the SIL Open Font License 1.1 (OFL), which permits
+use, study, modification and redistribution, including bundling with
+software. Full text: https://openfontlicense.org
+
+No Rockstar Games logos, artwork or fonts are used anywhere in this app.
+All lettering is rendered with the two OFL fonts above.
